@@ -1,6 +1,6 @@
-# Welcome to your CDK TypeScript project
+# Demo AWS Env
 
-This is a blank project for CDK development with TypeScript.
+Contains several `CodePipeline`s. Intended use: demo AWS environment for UI of Next Generation Shell.
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
