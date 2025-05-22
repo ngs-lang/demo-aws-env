@@ -1,0 +1,10 @@
+ns {
+
+	account = cached({ ``log: aws sts get-caller-identity``.Account })
+	F bucket_name() "demo-aws-env-code-${account()}"
+
+	F upload() {
+		$(log: zip -r source.zip . -x source.zip -x '.idea/*' -x '.git/*' -x 'cdk.out/*')
+		$(log: aws s3 cp source.zip "s3://${bucket_name()}/source.zip")
+	}
+}
