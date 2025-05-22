@@ -11,6 +11,7 @@ export class CodeBucketStack extends cdk.Stack {
 
     this.bucket = new s3.Bucket(this, 'CodeBucket', {
       bucketName: `demo-aws-env-code-${this.account}`,
+      versioned: true,
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true
     });
