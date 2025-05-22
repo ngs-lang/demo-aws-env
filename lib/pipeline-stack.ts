@@ -5,7 +5,7 @@ import {IBucket} from "aws-cdk-lib/aws-s3";
 import {Policy, PolicyStatement} from "aws-cdk-lib/aws-iam";
 
 export class PipelineStack extends Stack {
-  constructor(scope: Construct, id: string, props: StackProps & { sourceBucket: IBucket, envName: string }) {
+  constructor(scope: Construct, id: string, props: StackProps & { sourceBucket: IBucket, envName: string, succeed: boolean }) {
     super(scope, id, props);
 
     const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
@@ -13,7 +13,7 @@ export class PipelineStack extends Stack {
       synth: new pipelines.CodeBuildStep('Synth', {
         input: pipelines.CodePipelineSource.s3(props.sourceBucket, 'source.zip'),
         installCommands: ['npm install -g aws-cdk', 'npm ci'],
-        commands: ['npm run build', 'npx cdk synth'],
+        commands: ['npm run build', 'npx cdk synth', props.succeed ? 'echo OK' : 'exit 1'],
         primaryOutputDirectory: 'cdk.out',
       }),
     });

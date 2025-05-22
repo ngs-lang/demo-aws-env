@@ -7,4 +7,16 @@ ns {
 		$(log: zip -r source.zip . -x source.zip -x '.idea/*' -x '.git/*' -x 'cdk.out/*')
 		$(log: aws s3 cp source.zip "s3://${bucket_name()}/source.zip")
 	}
+
+	F dash() {
+		log('Pipelines')
+		``log: aws codepipeline list-pipelines``.filter({'name': Pfx('DemoNoRepoPipeline-')}).peach(F(p) {
+			p.meta().get_pipeline = ``log: aws codepipeline get-pipeline --name ${p.name}``
+			exec = ``log: aws codepipeline list-pipeline-executions --pipeline-name ${p.name}``[0]
+			p.update(exec.fields(%[status startTime lastUpdateTime]).mapk("exec:$X"))
+			if exec.status == 'Failed' {
+				echo(inspect(exec))
+			}
+		})
+	}
 }
